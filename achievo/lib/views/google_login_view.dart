@@ -24,6 +24,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
   );
 
   GoogleSignInAccount? _currentUser;
+  bool _isSignedIn = true;
 
   @override
   void initState() {
@@ -37,7 +38,11 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
         _handleSendToken();
       }
     });
-    _googleSignIn.signInSilently();
+    try {
+      _googleSignIn.signInSilently();
+    } catch (error) {
+      _isSignedIn = false;
+    }
   }
 
   Future<void> _initializeSharedPreferences() async {
@@ -54,19 +59,12 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
     }
   }
 
-  Future<void> _handleSignOut() async {
-    await _googleSignIn.disconnect();
-    setState(() {
-      _currentUser = null;
-    });
-    Fluttertoast.showToast(msg: "Signed out successfully.");
-  }
-
   Future<void> _handleSendToken() async {
     if (_currentUser == null) return;
 
     try {
-      final GoogleSignInAuthentication auth = await _currentUser!.authentication;
+      final GoogleSignInAuthentication auth =
+          await _currentUser!.authentication;
 
       if (auth.accessToken == null) {
         Fluttertoast.showToast(msg: "Failed to obtain access token.");
@@ -110,11 +108,20 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        _handleSignIn();
+    // wait for isSignedIn to be false, then show google button
+    // else show loading indicator
+    return FutureBuilder(
+      future: Future.delayed(const Duration(seconds: 5)),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return ElevatedButton(
+            onPressed: _handleSignIn,
+            child: const Text('Sign in with Google'),
+          );
+        } else {
+          return const CircularProgressIndicator();
+        }
       },
-      child: const Text('Sign in with Google'),
     );
   }
 }
