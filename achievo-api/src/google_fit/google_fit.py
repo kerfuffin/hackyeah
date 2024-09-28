@@ -1,10 +1,8 @@
 from datetime import timedelta, datetime
 from typing import List
 import httplib2
-from apiclient.discovery import build
-from oauth2client import tools
-from oauth2client.client import OAuth2WebServerFlow
-from oauth2client.file import Storage
+from googleapiclient.discovery import build
+from oauth2client.client import OAuth2Credentials
 from enum import Enum
 
 
@@ -17,7 +15,7 @@ class GFitDataType(Enum):
 
 class GoogleFit:
     """
-    Manages the service to access your Google Fit account data.
+    Manages the service to access Google Fit account data.
     """
 
     _AUTH_SCOPES = [
@@ -36,34 +34,23 @@ class GoogleFit:
         self._client_secret = client_secret
         self._service = None
 
-    def authenticate(self, auth_scopes: List[str] = None, credentials_file: str = '.google_fit_credentials'):
+    def authenticate_with_credentials(self, credentials):
         """
-        Authenticate and give access to Google auth scopes. If no valid credentials file is found, a browser will open
-        requesting access.
-        :param auth_scopes: [optional] Google auth scopes
-        :param credentials_file: [optional] Path to credentials file
+        Authenticate using existing OAuth2 credentials.
+        :param credentials: OAuth2Credentials object
         """
-        if auth_scopes is None:
-            auth_scopes = self._AUTH_SCOPES
-
-        flow = OAuth2WebServerFlow(self._client_id, self._client_secret, auth_scopes)
-        storage = Storage(credentials_file)
-        credentials = storage.get()
-
-        if credentials is None or credentials.invalid:
-            credentials = tools.run_flow(flow, storage)
         http = httplib2.Http()
         http = credentials.authorize(http)
         self._service = build('fitness', 'v1', http=http)
 
     def _execute_aggregate_request(self, data_type: str, start_date: datetime, end_date: datetime):
         def to_epoch(dt: datetime) -> int:
-            return int(dt.timestamp()) * 1000
+            return int(dt.timestamp() * 1000)
 
         body = {
             "aggregateBy": [{"dataTypeName": data_type}],
-            "endTimeMillis": str(to_epoch(end_date)),
             "startTimeMillis": str(to_epoch(start_date)),
+            "endTimeMillis": str(to_epoch(end_date)),
         }
         return self._service.users().dataset().aggregate(userId='me', body=body).execute()
 
@@ -80,7 +67,7 @@ class GoogleFit:
         points = GoogleFit._extract_points(resp)
 
         if len(points) == 0:
-            return 'no data found'
+            return None
         for point in points:
             cum += data_type.value[1](point['value'][0][data_type.value[2]])
 
@@ -100,13 +87,15 @@ class GoogleFit:
         """
         begin_today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         end_today = begin_today + timedelta(days=1)
-        return self._avg_for_response(data_type, begin_today, end_today)
+        res = self._avg_for_response(data_type, begin_today, end_today)
+        return int(res) if res else 0
 
     def total_calories_burned_today(self):
         """
         Returns the total calories burned today.
         """
-        return self.average_today(GFitDataType.CALORIES)
+        res = self.average_today(GFitDataType.CALORIES)
+        return int(res) if res else 0
 
     def total_sleep_duration_today(self):
         """
@@ -114,8 +103,9 @@ class GoogleFit:
         """
         sleep_data = self.average_today(GFitDataType.SLEEP)
         if isinstance(sleep_data, str):  # Check if there's no data found
-            return sleep_data
-        return sleep_data / (1000 * 60 * 60)  # Convert from milliseconds to hours
+            return 0.0
+        # Assuming sleep data is in milliseconds, convert to hours
+        return sleep_data / (1000.0 * 60.0 * 60.0)
 
     def get_all_data_today(self):
         """
@@ -125,5 +115,5 @@ class GoogleFit:
         data['steps'] = self.average_today(GFitDataType.STEPS)
         data['weight'] = self.average_today(GFitDataType.WEIGHT)
         data['calories'] = self.total_calories_burned_today()
-        data['sleep_hours'] = self.total_sleep_duration_today()
+        data['sleep'] = self.total_sleep_duration_today()
         return data
