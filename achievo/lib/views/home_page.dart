@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:achievo/controllers/token_controller.dart';
+import 'package:achievo/models/user_data.dart';
 import 'stats_table.dart';
 import 'quest_list.dart';
 
@@ -12,16 +14,32 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late SharedPreferences prefs;
+  TokenController? _tokenController;
+  UserData? _userData;
 
   @override
   void initState() {
     super.initState();
-    _loadPreferences();
+    _tokenController = TokenController();
+    _tokenController!.initialize().then((_) {
+      _tokenController!.startSendingToken();
+
+      // Listen for updates
+      _tokenController!.userDataNotifier.addListener(_onDataUpdated);
+    });
   }
 
-  void _loadPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
+  void _onDataUpdated() {
+    setState(() {
+      _userData = _tokenController!.userDataNotifier.value;
+    });
+  }
+
+  @override
+  void dispose() {
+    _tokenController?.userDataNotifier.removeListener(_onDataUpdated);
+    _tokenController?.stopSendingToken();
+    super.dispose();
   }
 
   @override
