@@ -42,37 +42,45 @@ class _StatsTableState extends State<StatsTable> {
 
   Widget statCard(int index, Stat stat) {
     return Container(
+      width: 80, // Fixed width for the stat boxes
+      height: 50, // Reduced height for the stat boxes
       decoration: BoxDecoration(
-        color: stat.backgroundColor,
-        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(
+            color: Colors.black, width: 1.0), // Very thin black outer border
+        borderRadius: BorderRadius.circular(8.0), // Uniform border radius
       ),
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0), // Reduced horizontal padding
-      margin: const EdgeInsets.symmetric(horizontal: 4.0), // Reduced horizontal margin
-      width: 80, // Set a narrower fixed width for the stat boxes
-      height: 60, // Keep the height fixed
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end, // Align text to the bottom
-        children: [
-          Text(
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+              color: Colors.brown, width: 3.0), // Thick brown inner border
+          borderRadius:
+              BorderRadius.circular(7.0), // Same radius as outer border
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: stat.backgroundColor, // Background color for the stat
+            border: Border.all(
+                color: Colors.black,
+                width: 1.0), // Very thin black inner border
+            borderRadius:
+                BorderRadius.circular(4.0), // Same radius as other borders
+          ),
+          alignment: Alignment.center, // Center the text
+          child: Text(
             '${stat.name}: ${stat.value}',
             style: TextStyle(fontSize: 16.0, color: Colors.white), // Font size
             textAlign: TextAlign.center,
           ),
-        ],
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 4.0,
-      margin: EdgeInsets.all(16.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
-      ),
+    return Container(
       child: Padding(
-        padding: const EdgeInsets.all(8.0), // Adjusted padding
+        padding: const EdgeInsets.all(32.0), // Adjusted padding
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

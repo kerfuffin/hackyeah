@@ -28,7 +28,7 @@ class MainApp extends StatelessWidget {
             //button
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/name');
+                Navigator.pushNamed(context, '/login');
               },
               child: const Text('Continue'),
             ).animate()

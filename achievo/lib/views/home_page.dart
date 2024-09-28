@@ -31,8 +31,7 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: const Text('Achievo'),
         ),
-        body:
-            Column(
+        body: Column(
           children: <Widget>[
             Expanded(
                 flex: 7,
@@ -42,27 +41,30 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               flex: 3,
               child: Container(
-                color: const Color.fromARGB(255, 116, 46, 0),
-                child: StatsTable(initialStats: 
-                  [
-                    Stat(
-                      name: 'STR',
-                      value: 10,
-                      backgroundColor: Colors.red,
-                    ),
-                    Stat(
-                      name: 'DEX',
-                      value: 10,
-                      backgroundColor: Colors.green,
-                    ),
-                    Stat(
-                      name: 'INT',
-                      value: 10,
-                      backgroundColor: Colors.blue,
-                    ),
-                  ],
-                )
-              ),
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                    image: AssetImage('assets/images/stat_bg.png'),
+                    fit: BoxFit.fill,
+                  )),
+                  child: StatsTable(
+                    initialStats: [
+                      Stat(
+                        name: 'STR',
+                        value: 10,
+                        backgroundColor: Colors.red,
+                      ),
+                      Stat(
+                        name: 'DEX',
+                        value: 10,
+                        backgroundColor: Colors.green,
+                      ),
+                      Stat(
+                        name: 'INT',
+                        value: 10,
+                        backgroundColor: Colors.blue,
+                      ),
+                    ],
+                  )),
             ),
           ],
         ));

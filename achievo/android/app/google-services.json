@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "790013242756",
+    "project_id": "hallowed-span-392322",
+    "storage_bucket": "hallowed-span-392322.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790013242756:android:5e97e124d64b4079e701d1",
+        "android_client_info": {
+          "package_name": "com.kerfuffin.achievo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDe_mo7hr8s7fbbhFKNL1JL3P-hws5EO9s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

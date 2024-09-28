@@ -40,6 +40,10 @@ dependencies:
   flutter_animate: ^4.5.0
   newton_particles: ^0.2.2
   shared_preferences: ^2.3.2
+  firebase_core: ^2.16.0
+  firebase_auth: ^4.7.2
+  google_sign_in: ^6.2.0
+  fluttertoast: ^8.2.8
 
 
 
@@ -70,3 +74,5 @@ flutter:
         fonts:
           - asset: assets/fonts/Tiny5-Regular.ttf
             weight: 400
+  assets:
+    - assets/images/
