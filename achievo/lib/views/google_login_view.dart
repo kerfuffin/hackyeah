@@ -110,25 +110,11 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Achievo'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text("Sign in with Google",
-                style: Theme.of(context).textTheme.displayLarge),
-            ElevatedButton(
-              onPressed: _handleSignIn,
-              child: _isSigningIn
-                  ? const CircularProgressIndicator()
-                  : const Text('Sign in with Google'),
-            ),
-          ],
-        ),
-      ),
+    return ElevatedButton(
+      onPressed: () {
+        _handleSignIn();
+      },
+      child: const Text('Sign in with Google'),
     );
   }
 }
