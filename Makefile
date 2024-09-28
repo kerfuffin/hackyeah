@@ -40,3 +40,4 @@ clean:
 run:
 	@echo Starting the application...
 	$(PYTHON) src/main.py
+
