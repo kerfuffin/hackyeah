@@ -1,111 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: GoogleSignInScreen(),
-    );
-  }
-}
-
-class GoogleSignInScreen extends StatefulWidget {
-  @override
-  _GoogleSignInScreenState createState() => _GoogleSignInScreenState();
-}
-
-class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
-  // Configure the GoogleSignIn instance with the required scopes.
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'https://www.googleapis.com/auth/fitness.body.read',
-      'https://www.googleapis.com/auth/fitness.activity.read',
-      'https://www.googleapis.com/auth/fitness.nutrition.read',
-      'https://www.googleapis.com/auth/fitness.sleep.read',
-    ],
-  );
-
-  GoogleSignInAccount? _currentUser;
+class GoogleSignInButton extends StatefulWidget {
+  const GoogleSignInButton({Key? key}) : super(key: key);
 
   @override
-  void initState() {
-    super.initState();
-    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
-      setState(() {
-        _currentUser = account;
-      });
-    });
-    // _googleSignIn
-    //     .signInSilently(); // Automatically try to sign in the user if previously authenticated.
-  }
+  State<GoogleSignInButton> createState() => _GoogleSignInButtonState();
+}
+
+class _GoogleSignInButtonState extends State<GoogleSignInButton> {
+  bool _isSigningIn = false;
 
   Future<void> _handleSignIn() async {
+    setState(() {
+      _isSigningIn = true;
+    });
+
     try {
-      await _googleSignIn.signIn();
-      Fluttertoast.showToast(
-          msg: "toast messag loged in",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
-      Navigator.pushNamed(context, '/home');
-      print("Sign in successful");
-    } catch (error) {
-      print("Sign in failed: $error");
+      // Trigger the Google Sign-In flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser == null) {
+        // The user canceled the sign-in
+        setState(() {
+          _isSigningIn = false;
+        });
+        return;
+      }
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      // Create a credential from the access token
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Sign in to Firebase with the Google [UserCredential]
+      User? result = FirebaseAuth.instance.currentUser;
+      print('Signed in with Google');
+    } catch (e) {
+      // Handle error (e.g., show a message to the user)
+      print('Error during Google Sign-In: $e');
+    } finally {
+      setState(() {
+        _isSigningIn = false;
+      });
     }
   }
 
-  Future<void> _handleSignOut() async {
-    await _googleSignIn.disconnect();
-    setState(() {
-      _currentUser = null;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    GoogleSignInAccount? user = _currentUser;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Google Fit Sign In'),
-        actions: <Widget>[
-          if (user != null)
-            IconButton(
-              icon: Icon(Icons.exit_to_app),
-              onPressed: _handleSignOut,
-            )
-        ],
+        title: const Text('Achievo'),
       ),
       body: Center(
-        child: user != null
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  ListTile(
-                    leading: GoogleUserCircleAvatar(
-                      identity: user,
-                    ),
-                    title: Text(user.displayName ?? ''),
-                    subtitle: Text(user.email),
-                  ),
-                  ElevatedButton(
-                    onPressed: _handleSignOut,
-                    child: Text('SIGN OUT'),
-                  ),
-                ],
-              )
-            : ElevatedButton(
-                onPressed: _handleSignIn,
-                child: Text('SIGN IN WITH GOOGLE'),
-              ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text("Sign in with Google",
+                style: Theme.of(context).textTheme.displayLarge),
+            ElevatedButton(
+              onPressed: _handleSignIn,
+              child: _isSigningIn
+                  ? const CircularProgressIndicator()
+                  : const Text('Sign in with Google'),
+            ),
+          ],
+        ),
       ),
     );
   }
