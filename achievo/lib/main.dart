@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Achievo',
       theme: flutterNesTheme(),
-      home: MainApp(),
+      home: const MainApp(),
       routes: <String, WidgetBuilder>{
         '/name': (BuildContext context) => const NamePage(),
         '/home': (BuildContext context) => const HomePage(),

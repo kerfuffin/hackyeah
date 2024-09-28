@@ -50,19 +50,7 @@ class MainApp extends StatelessWidget {
                   ),
               const SizedBox(height: 20),
               // wait for 3 seconds, then show google button
-              FutureBuilder(
-                future: Future.delayed(const Duration(seconds: 5)),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return GoogleSignInScreen().animate().fadeIn(
-                          duration: const Duration(seconds: 1),
-                          curve: Curves.easeIn,
-                        );
-                  } else {
-                    return const CircularProgressIndicator();
-                  }
-                },
-              ),
+              GoogleSignInScreen()
             ],
           ),
         )
