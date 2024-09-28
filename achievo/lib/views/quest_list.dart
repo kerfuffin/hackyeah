@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:nes_ui/nes_ui.dart';
 
 class Quest {
   final String name;
   final String iconPath;   
   final int experience;    
   final int gold;           
-  final String objectives; 
-  final String reward;
+  final String objectives;
   final Duration timeLimit;
+  final String level;
 
   Quest({
     required this.name,
@@ -15,8 +16,8 @@ class Quest {
     required this.experience,
     required this.gold,
     required this.objectives,
-    required this.reward,
     required this.timeLimit,
+    required this.level,
   });
 }
 
@@ -47,33 +48,31 @@ class _QuestListState extends State<QuestList> {
               experience: quest.experience,
               gold: quest.gold,
               objectives: quest.objectives,
-              reward: quest.reward,
               timeLimit: quest.timeLimit,
+              level: quest.level,
             ))
         .toList();
   }
 
   Widget questCard(int index, Quest quest) {
-  return Card(
-    elevation: 4,
-    margin: const EdgeInsets.all(10),
-    child: Padding(
+  return NesContainer(
       padding: const EdgeInsets.all(16.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Ikona (square icon taking full height)
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              image: DecorationImage(
-                image: AssetImage(quest.iconPath),
+          NesContainer(
+            width: 100,
+            height: 100,
+            padding: const EdgeInsets.all(3.8),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: Image.asset(
+                quest.iconPath, 
                 fit: BoxFit.cover,
                 filterQuality: FilterQuality.none,
               ),
-            ),
+            )
           ),
           const SizedBox(width: 16),
           // Szczegóły zadania
@@ -82,59 +81,73 @@ class _QuestListState extends State<QuestList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Quest name
-                Text(
-                  quest.name,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children:[
+                    Text(
+                      quest.name,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      quest.level,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ]
                 ),
                 const SizedBox(height: 8),
                 // Cele
                 Text(
                   '${quest.objectives}',
-                  style: const TextStyle(fontSize: 10),
+                  style: const TextStyle(fontSize: 18),
                 ),
                 const SizedBox(height: 4),
-                // Nagroda z ikoną pieniążka
                 Row(
                   children: [
-                    Container(
-                      width: 10,
-                      height: 10,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/coin.png'),
-                          fit: BoxFit.fitHeight,
-                          filterQuality: FilterQuality.none,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 4), // Space between image and text
                     Text(
-                      '${quest.gold}', // Display the gold amount
-                      style: const TextStyle(fontSize: 10),
+                      '${quest.experience}exp',
+                      style: const TextStyle(fontSize: 18),
                     ),
-                  ],
-                ),
-                // Doświadczenie
-                Text(
-                  '${quest.experience} exp',
-                  style: const TextStyle(fontSize: 10),
-                ),
-                // Limit czasowy
-                Text(
-                  'Limit czasowy: ${quest.timeLimit.inMinutes} minut',
-                  style: const TextStyle(fontSize: 10),
+                    const SizedBox(width: 16),
+                    Row(
+                      children: [
+                        Text(
+                          '${quest.gold}',
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                        const SizedBox(width: 2),
+                        Container(
+                          width: 18,
+                          height: 18,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            image: DecorationImage(
+                              image: AssetImage('assets/images/coin.png'),
+                              fit: BoxFit.fitHeight,
+                              filterQuality: FilterQuality.none,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 16),
+                    Text(
+                      '${quest.timeLimit.inMinutes}min',
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                  ]
                 ),
               ],
             ),
           ),
         ],
       ),
-    ),
-  );
+    );
 }
 
 
@@ -143,15 +156,14 @@ class _QuestListState extends State<QuestList> {
   Widget build(BuildContext context) {
     return Container(
       child: Padding(
-        padding: const EdgeInsets.all(16.0), // Adjusted padding
-        child: ListView(
-          children: [
-            ...quests.asMap().entries.map((entry) {
-              int index = entry.key;
-              Quest quest = entry.value;
-              return questCard(index, quest);
-            }).toList(),
-          ],
+        padding: const EdgeInsets.all(16.0), // Dostosowane odstępy wewnętrzne
+        child: ListView.separated(
+          itemCount: quests.length, // Liczba elementów
+          separatorBuilder: (context, index) => SizedBox(height: 16), // Odstęp o wysokości 16 pikseli
+          itemBuilder: (context, index) {
+            Quest quest = quests[index];
+            return questCard(index, quest); // Zwróć kartę questu
+          },
         ),
       ),
     );
