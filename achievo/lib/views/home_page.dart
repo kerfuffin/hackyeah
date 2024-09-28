@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'stats_table.dart';
+import 'quest_list.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -37,6 +38,26 @@ class _HomePageState extends State<HomePage> {
                 flex: 7,
                 child: Container(
                   color: const Color.fromARGB(255, 116, 46, 0),
+                  child: QuestList(
+          initialQuests: [
+            Quest(
+              name: 'Zadanie 1',
+              iconPath: 'assets/images/Icons_20.png', // Ścieżka do ikony
+              experience: 100,
+              gold: 50,
+              objectives: '2000 steps',
+              timeLimit: Duration(hours: 1),
+              level: 'easy'
+            ),
+            Quest(
+              name: 'Zadanie 2',
+              iconPath: 'assets/images/Icons_20.png', // Ścieżka do ikony
+              experience: 200,
+              gold: 100,
+              objectives: '5 km',
+              timeLimit: Duration(hours: 2),
+              level: 'hard'
+            ),]),
                 )),
             Expanded(
               flex: 3,
