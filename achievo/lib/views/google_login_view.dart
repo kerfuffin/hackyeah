@@ -1,19 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: GoogleSignInScreen(),
-    );
-  }
-}
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class GoogleSignInScreen extends StatefulWidget {
   @override
@@ -21,7 +11,8 @@ class GoogleSignInScreen extends StatefulWidget {
 }
 
 class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
-  // Configure the GoogleSignIn instance with the required scopes.
+  SharedPreferences? prefs;
+
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: [
       'https://www.googleapis.com/auth/fitness.body.read',
@@ -36,30 +27,29 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
   @override
   void initState() {
     super.initState();
+    _initializeSharedPreferences();
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
       setState(() {
         _currentUser = account;
       });
+      if (_currentUser != null) {
+        _handleSendToken();
+      }
     });
-    // _googleSignIn
-    //     .signInSilently(); // Automatically try to sign in the user if previously authenticated.
+    _googleSignIn.signInSilently();
+  }
+
+  Future<void> _initializeSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
   }
 
   Future<void> _handleSignIn() async {
     try {
       await _googleSignIn.signIn();
-      Fluttertoast.showToast(
-          msg: "toast messag loged in",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
-      Navigator.pushNamed(context, '/home');
       print("Sign in successful");
     } catch (error) {
       print("Sign in failed: $error");
+      Fluttertoast.showToast(msg: "Sign in failed. Please try again.");
     }
   }
 
@@ -68,6 +58,53 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
     setState(() {
       _currentUser = null;
     });
+    Fluttertoast.showToast(msg: "Signed out successfully.");
+  }
+
+  Future<void> _handleSendToken() async {
+    if (_currentUser == null) return;
+
+    try {
+      final GoogleSignInAuthentication auth = await _currentUser!.authentication;
+
+      if (auth.accessToken == null) {
+        Fluttertoast.showToast(msg: "Failed to obtain access token.");
+        return;
+      }
+
+      // Save the token to SharedPreferences
+      if (prefs != null) {
+        await prefs!.setString('token', auth.accessToken!);
+      } else {
+        print("SharedPreferences not initialized.");
+      }
+
+      // Prepare the JSON payload
+      Map<String, String> payload = {
+        "token": auth.accessToken!,
+      };
+
+      // Send the POST request
+      final response = await http.post(
+        Uri.parse('https://f0f4-188-146-118-195.ngrok-free.app/data'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(payload),
+      );
+
+      if (response.statusCode == 200) {
+        Fluttertoast.showToast(msg: "Token sent successfully.");
+        // Navigate to HomeScreen
+        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+      } else {
+        print("Failed to send token. Status code: ${response.statusCode}");
+        Fluttertoast.showToast(msg: "Failed to send token.");
+      }
+    } catch (e) {
+      print("Error sending token: $e");
+      Fluttertoast.showToast(msg: "An error occurred while sending the token.");
+    }
   }
 
   @override
