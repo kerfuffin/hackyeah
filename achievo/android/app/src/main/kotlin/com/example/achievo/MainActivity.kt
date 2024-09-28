@@ -1,4 +1,4 @@
-package com.example.achievo
+package com.kerfuffin.achievo
 
 import io.flutter.embedding.android.FlutterActivity
 
