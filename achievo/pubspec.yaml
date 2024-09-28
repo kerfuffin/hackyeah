@@ -67,7 +67,7 @@ flutter:
   assets:
     - animations/skeleton/attack/
     - animations/skeleton/idle/
-    
+    - assets/images/
     
     
 
@@ -82,5 +82,3 @@ flutter:
         fonts:
           - asset: assets/fonts/Tiny5-Regular.ttf
             weight: 400
-  assets:
-    - assets/images/
