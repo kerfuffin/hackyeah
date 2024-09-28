@@ -14,29 +14,60 @@ class MainApp extends StatelessWidget {
       children: [
         // First cloud layer
         Positioned.fill(
-          child: Image.asset(
-            'assets/images/cloud_1.png',
-            fit: BoxFit.cover,
+          child: OverflowBox(
+            maxWidth: double.infinity,
+            maxHeight: double.infinity,
+            child: Image.asset(
+              'assets/images/cloud_1.png',
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         Positioned.fill(
-          child: Image.asset(
-            'assets/images/cloud_2.png',
-            fit: BoxFit.cover,
+          child: OverflowBox(
+            maxWidth: double.infinity,
+            maxHeight: double.infinity,
+            child: Image.asset(
+              'assets/images/cloud_2.png',
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
+        ).animate().slideX(
+              duration: const Duration(seconds: 20),
+              begin: -0.1,
+              end: 0.1,
+              curve: Curves.easeInOut,
+            ),
         Positioned.fill(
-          child: Image.asset(
-            'assets/images/cloud_3.png',
-            fit: BoxFit.cover,
+          child: OverflowBox(
+            maxWidth: double.infinity,
+            maxHeight: double.infinity,
+            child: Image.asset(
+              'assets/images/cloud_3.png',
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
+        ).animate().slideX(
+              duration: const Duration(seconds: 20),
+              begin: -0.2,
+              end: 0.2,
+              curve: Curves.easeInOut,
+            ),
         Positioned.fill(
-          child: Image.asset(
-            'assets/images/cloud_4.png',
-            fit: BoxFit.cover,
+          child: OverflowBox(
+            maxWidth: double.infinity,
+            maxHeight: double.infinity,
+            child: Image.asset(
+              'assets/images/cloud_4.png',
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
+        ).animate().slideX(
+              duration: const Duration(seconds: 20),
+              begin: -0.4,
+              end: 0.4,
+              curve: Curves.easeInOut,
+            ),
         Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
