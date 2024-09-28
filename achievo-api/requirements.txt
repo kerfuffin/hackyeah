@@ -1,0 +1,7 @@
+flask
+google-auth
+google-auth-oauthlib
+google
+googleapi
+apiclient
+google-api-python-client
