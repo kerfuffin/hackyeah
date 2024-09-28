@@ -6,6 +6,7 @@ import 'package:achievo/main_app.dart';
 import 'package:achievo/views/name_page.dart';
 import 'package:achievo/views/google_login_view.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'views/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
