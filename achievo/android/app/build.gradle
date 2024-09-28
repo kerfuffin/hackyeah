@@ -8,6 +8,10 @@ plugins {
   id 'com.google.gms.google-services'
 }
 
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+
+
 dependencies {
     implementation 'com.google.firebase:firebase-auth:21.0.3'
 }
