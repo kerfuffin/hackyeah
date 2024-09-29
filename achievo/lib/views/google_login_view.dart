@@ -81,6 +81,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
       // Prepare the JSON payload
       Map<String, String> payload = {
         "token": auth.accessToken!,
+        "email": _currentUser!.email,
       };
 
       // Send the POST request

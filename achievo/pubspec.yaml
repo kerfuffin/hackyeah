@@ -70,6 +70,7 @@ flutter:
     - animations/centipede/idle/
     - animations/dude/idle/
     - assets/images/
+    - assets/images/questIcons/
     
     
 
