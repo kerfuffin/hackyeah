@@ -9,9 +9,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'views/home_page.dart';
 import 'views/google_login_view.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.dark,
+  ));
   await Firebase.initializeApp(
       // options: DefaultFirebaseOptions.currentPlatform,
       );
@@ -25,9 +31,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Achievo',
       theme: flutterNesTheme(),
-      home: const HomePage(),
+      home:  const MainApp(),
       routes: <String, WidgetBuilder>{
         '/name': (BuildContext context) => const NamePage(),
         '/home': (BuildContext context) => const HomePage(),

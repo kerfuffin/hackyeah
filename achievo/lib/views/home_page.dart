@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
   child: QuestList(
     initialQuests: [
       Quest(
-        name: 'Quest 1',
+        name: 'Bear Hunt',
         iconPath: 'assets/images/questIcons/Icons_21.png',
         experience: 100,
         gold: 50,
@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
         enemy: 'centipede',
       ),
       Quest(
-        name: 'Quest 2',
+        name: 'Spider Slayer',
         iconPath: 'assets/images/questIcons/Icons_22.png',
         experience: 200,
         gold: 100,
@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
         enemy: 'centipede',
       ),
       Quest(
-        name: 'Quest 3',
+        name: "Toad's Bane",
         iconPath: 'assets/images/questIcons/Icons_23.png',
         experience: 300,
         gold: 20,
@@ -133,4 +133,5 @@ class _HomePageState extends State<HomePage> {
   void _onAbandon() {
     print('Abandon battle');
   }
+
 }

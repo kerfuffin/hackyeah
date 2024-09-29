@@ -86,7 +86,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
 
       // Send the POST request
       final response = await http.post(
-        Uri.parse('https://f0f4-188-146-118-195.ngrok-free.app/data'),
+        Uri.parse('https://2ae8-212-244-11-209.ngrok-free.app/data'),
         headers: {
           'Content-Type': 'application/json',
         },
