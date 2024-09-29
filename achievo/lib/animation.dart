@@ -6,7 +6,8 @@ import 'package:flutter/services.dart' show rootBundle;
 class AnimatedImageSequence extends StatefulWidget {
   final String animationName;
   final String initialState;
-  final List<String> availableStates;
+  final Map<String, int> stateTypes; // Mapa typów stanów
+  final Map<String, String?> stateTransitions; // Mapa stanów przejściowych dla typu 1
   final double? size;
   final StreamController<String> stateController;
   final int animSpeed;
@@ -15,10 +16,10 @@ class AnimatedImageSequence extends StatefulWidget {
     Key? key,
     required this.animationName,
     required this.initialState,
-    required this.availableStates,
+    required this.stateTypes, // Mapa typów stanów
+    required this.stateTransitions, // Mapa stanów przejściowych dla typu 1
     required this.stateController,
     required this.animSpeed,
-
     this.size,
   }) : super(key: key);
 
@@ -61,7 +62,7 @@ class _AnimatedImageSequenceState extends State<AnimatedImageSequence> {
     final manifestContent = await rootBundle.loadString('AssetManifest.json');
     final Map<String, dynamic> manifestMap = json.decode(manifestContent);
 
-    for (String state in widget.availableStates) {
+    for (String state in widget.stateTypes.keys) {
       String statePath = '$basePath$state/';
       List<String> stateFrames = manifestMap.keys
           .where((String key) => key.startsWith(statePath) && key.endsWith('.png'))
@@ -94,15 +95,45 @@ class _AnimatedImageSequenceState extends State<AnimatedImageSequence> {
 
   void _startAnimation() {
     if (frames[currentState] == null || frames[currentState]!.isEmpty) return;
+    
     _timer = Timer.periodic(Duration(milliseconds: widget.animSpeed), (timer) {
       setState(() {
-        _currentFrame = (_currentFrame + 1) % frames[currentState]!.length;
+        // Przechodzenie do kolejnej klatki
+        _currentFrame++;
+
+        // Sprawdzenie, czy osiągnęliśmy koniec animacji
+        if (_currentFrame >= frames[currentState]!.length) {
+          _handleEndOfAnimation();
+        }
       });
     });
   }
 
+  void _handleEndOfAnimation() {
+    int stateType = widget.stateTypes[currentState] ?? 0; // Domyślnie 0 (loop)
+
+    switch (stateType) {
+      case 0: // Normalny loop
+        _currentFrame = 0; // Powrót na początek animacji
+        break;
+      case 1: // Po zakończeniu przechodzimy do wyznaczonego stanu
+        String? nextState = widget.stateTransitions[currentState];
+        if (nextState != null && widget.stateTypes.containsKey(nextState)) {
+          _swapState(nextState);
+        }
+        break;
+      case 2: // Zatrzymujemy animację na ostatniej klatce
+        _timer.cancel();
+        _currentFrame = frames[currentState]!.length - 1; // Zatrzymanie na ostatniej klatce
+        break;
+      default:
+        _currentFrame = 0;
+        break;
+    }
+  }
+
   void _swapState(String newState) {
-    if (widget.availableStates.contains(newState) && newState != currentState) {
+    if (widget.stateTypes.containsKey(newState) && newState != currentState) {
       // Zatrzymaj aktualną animację
       _timer.cancel();
 

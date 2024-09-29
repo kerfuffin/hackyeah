@@ -126,7 +126,12 @@ class BattleView extends StatelessWidget {
             child: AnimatedImageSequence(
               animationName: 'dude',
               initialState: 'idle',
-              availableStates: ['idle'],
+              stateTypes: {
+                'idle': 0,  // Pętla
+              },
+              stateTransitions: {
+                //'attack': 'idle',  // Po "attack" przejdź do "idle"
+              },
               stateController: characterStateController, // Przekazujemy kontroler
               size: 150,
               animSpeed: 300,
@@ -144,7 +149,12 @@ class BattleView extends StatelessWidget {
             child:  AnimatedImageSequence(
               animationName: 'centipede',
               initialState: 'idle',
-              availableStates: ['idle'],
+              stateTypes: {
+                'idle': 0,  // Pętla
+              },
+              stateTransitions: {
+                //'attack': 'idle',  // Po "attack" przejdź do "idle"
+              },
               stateController: enemyStateController, // Przekazujemy kontroler
               size: 200,
               animSpeed: 200,

@@ -19,39 +19,45 @@ class _HomePageState extends State<HomePage> {
   late final List<Widget> _views; 
 
   final Widget _quests = Container(
-        color: const Color.fromARGB(255, 116, 46, 0),
-        child: QuestList(
-          initialQuests: [
-            Quest(
-              name: 'Quest 1',
-              iconPath: 'assets/images/questIcons/Icons_21.png',
-              experience: 100,
-              gold: 50,
-              objectives: '2000 steps',
-              timeLimit: Duration(hours: 1),
-              level: 'easy',
-            ),
-            Quest(
-              name: 'Quest 2',
-              iconPath: 'assets/images/questIcons/Icons_22.png',
-              experience: 200,
-              gold: 100,
-              objectives: '5 km',
-              timeLimit: Duration(hours: 2),
-              level: 'hard',
-            ),
-            Quest(
-              name: 'Quest 3',
-              iconPath: 'assets/images/questIcons/Icons_23.png',
-              experience: 300,
-              gold: 20,
-              objectives: '200 kcal',
-              timeLimit: Duration(minutes: 90),
-              level: 'hard',
-            )
-          ],
-        ),
-      );
+  decoration: BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('assets/images/quest_board.png'), // Replace with your image path
+      fit: BoxFit.cover, // Adjust the image to cover the entire container
+      filterQuality: FilterQuality.none,
+    ),
+  ),
+  child: QuestList(
+    initialQuests: [
+      Quest(
+        name: 'Quest 1',
+        iconPath: 'assets/images/questIcons/Icons_21.png',
+        experience: 100,
+        gold: 50,
+        objectives: '2000 steps',
+        timeLimit: Duration(hours: 1),
+        level: 'easy',
+      ),
+      Quest(
+        name: 'Quest 2',
+        iconPath: 'assets/images/questIcons/Icons_22.png',
+        experience: 200,
+        gold: 100,
+        objectives: '5 km',
+        timeLimit: Duration(hours: 2),
+        level: 'hard',
+      ),
+      Quest(
+        name: 'Quest 3',
+        iconPath: 'assets/images/questIcons/Icons_23.png',
+        experience: 300,
+        gold: 20,
+        objectives: '200 kcal',
+        timeLimit: Duration(minutes: 90),
+        level: 'hard',
+      ),
+      ],
+    ),
+  );
 
   @override
   void initState() {
@@ -90,8 +96,9 @@ class _HomePageState extends State<HomePage> {
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/images/stat_bg.png'),
+                  image: AssetImage('assets/images/paper_bg.png'),
                   fit: BoxFit.fill,
+                  filterQuality: FilterQuality.none,
                 ),
               ),
               child: StatsTable(
