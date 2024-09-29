@@ -68,6 +68,7 @@ flutter:
     - animations/skeleton/attack/
     - animations/skeleton/idle/
     - assets/images/
+    - assets/images/questIcons/
     
     
 
