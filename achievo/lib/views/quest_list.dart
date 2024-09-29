@@ -24,11 +24,13 @@ class Quest {
 class QuestList extends StatefulWidget {
   final List<Quest> initialQuests;
   final Function(List<Quest>)? onQuestsChanged;
+  final Function()? onQuestCompleted;
 
   QuestList({
     Key? key,
     required this.initialQuests,
     this.onQuestsChanged,
+    this.onQuestCompleted
   }) : super(key: key);
 
   @override
@@ -60,7 +62,7 @@ class _QuestListState extends State<QuestList> {
       _showQuestDetails(context, quest); // Show quest details pop-up
     },
     child: NesContainer(
-      backgroundColor: const Color.fromRGBO(238, 231, 215, 1.0),
+      backgroundColor: const Color.fromRGBO(254, 225, 184, 1.0),
       padding: const EdgeInsets.all(16.0),
       child: Stack(
         clipBehavior: Clip.none, // Allows content to overflow the card boundaries
@@ -189,7 +191,7 @@ class _QuestListState extends State<QuestList> {
       return Center( 
           child: NesContainer(
             padding: EdgeInsets.zero,
-            backgroundColor: Color.fromRGBO(238, 231, 215, 1.0),
+            backgroundColor: Color.fromRGBO(254, 225, 184, 1.0),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -205,7 +207,6 @@ class _QuestListState extends State<QuestList> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  // Ikona
                   NesContainer(
                     width: 100,
                     height: 100,
@@ -220,13 +221,11 @@ class _QuestListState extends State<QuestList> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  // Cele
                   Text(
                     'Objective: ${quest.objectives}',
                     style: const TextStyle(fontSize: 18),
                   ),
                   const SizedBox(height: 8),
-                  // Szczegóły zadania
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -242,13 +241,15 @@ class _QuestListState extends State<QuestList> {
                   const SizedBox(height: 8),
                   Text('Level: ${quest.level}'),
                   const SizedBox(height: 16),
-                  // Przyciski
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       NesButton(
                         type: NesButtonType.success,
                         onPressed: () {
+                          if (widget.onQuestCompleted != null) {
+                            widget.onQuestCompleted!();
+                          }
                           Navigator.of(context).pop();
                         },
                         child: const Text('Confirm'),
