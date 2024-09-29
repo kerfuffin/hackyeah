@@ -39,17 +39,17 @@ class _HomePageState extends State<HomePage> {
       child: QuestList(
         initialQuests: [
           Quest(
-            name: 'Quest 1',
-            iconPath: 'assets/images/questIcons/Icons_21.png',
-            experience: 100,
-            gold: 50,
-            objectives: '2000 steps',
+            name: 'Giant Centipede',
+            iconPath: 'assets/images/questIcons/Icons_37.png',
+            experience: 150,
+            gold: 70,
+            objectives: '2500 steps',
             timeLimit: Duration(hours: 1),
-            level: 'easy',
+            level: 'medium',
             enemy: 'centipede',
           ),
           Quest(
-            name: 'Quest 2',
+            name: 'Spider Slayer',
             iconPath: 'assets/images/questIcons/Icons_22.png',
             experience: 200,
             gold: 100,
@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
             enemy: 'centipede',
           ),
           Quest(
-            name: 'Quest 3',
+            name: "Toad's Bane",
             iconPath: 'assets/images/questIcons/Icons_23.png',
             experience: 300,
             gold: 20,
@@ -144,7 +144,7 @@ class _HomePageState extends State<HomePage> {
             iconPath: 'assets/images/questIcons/Icons_21.png',
             experience: 100,
             gold: 50,
-            objectives: '2000 steps',
+            objectives: '2500 steps',
             timeLimit: Duration(hours: 1),
             level: 'easy',
             enemy: 'centipede',
