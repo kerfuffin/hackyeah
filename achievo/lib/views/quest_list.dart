@@ -249,6 +249,7 @@ class _QuestListState extends State<QuestList> {
                       NesButton(
                         type: NesButtonType.success,
                         onPressed: () {
+                          
                           if (widget.onQuestCompleted != null) {
                             widget.onQuestCompleted!();
                           }

@@ -18,49 +18,7 @@ class _HomePageState extends State<HomePage> {
 
   late final List<Widget> _views; 
 
-  final Widget _quests = Container(
-  decoration: BoxDecoration(
-    image: DecorationImage(
-      image: AssetImage('assets/images/quest_board.png'), // Replace with your image path
-      fit: BoxFit.cover, // Adjust the image to cover the entire container
-      filterQuality: FilterQuality.none,
-    ),
-  ),
-  child: QuestList(
-    initialQuests: [
-      Quest(
-        name: 'Quest 1',
-        iconPath: 'assets/images/questIcons/Icons_21.png',
-        experience: 100,
-        gold: 50,
-        objectives: '2000 steps',
-        timeLimit: Duration(hours: 1),
-        level: 'easy',
-        enemy: 'centipede',
-      ),
-      Quest(
-        name: 'Quest 2',
-        iconPath: 'assets/images/questIcons/Icons_22.png',
-        experience: 200,
-        gold: 100,
-        objectives: '5 km',
-        timeLimit: Duration(hours: 2),
-        level: 'hard',
-        enemy: 'centipede',
-      ),
-      Quest(
-        name: 'Quest 3',
-        iconPath: 'assets/images/questIcons/Icons_23.png',
-        experience: 300,
-        gold: 20,
-        objectives: '200 kcal',
-        timeLimit: Duration(minutes: 90),
-        level: 'hard',
-        enemy: 'centipede',
-      ),
-      ],
-    ),
-  );
+  late Widget _quest;
 
   @override
   void initState() {
@@ -70,8 +28,53 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _initializeViews() {
+    this._quest = Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/quest_board.png'), // Replace with your image path
+          fit: BoxFit.cover, // Adjust the image to cover the entire container
+          filterQuality: FilterQuality.none,
+        ),
+      ),
+      child: QuestList(
+        initialQuests: [
+          Quest(
+            name: 'Quest 1',
+            iconPath: 'assets/images/questIcons/Icons_21.png',
+            experience: 100,
+            gold: 50,
+            objectives: '2000 steps',
+            timeLimit: Duration(hours: 1),
+            level: 'easy',
+            enemy: 'centipede',
+          ),
+          Quest(
+            name: 'Quest 2',
+            iconPath: 'assets/images/questIcons/Icons_22.png',
+            experience: 200,
+            gold: 100,
+            objectives: '5 km',
+            timeLimit: Duration(hours: 2),
+            level: 'hard',
+            enemy: 'centipede',
+          ),
+          Quest(
+            name: 'Quest 3',
+            iconPath: 'assets/images/questIcons/Icons_23.png',
+            experience: 300,
+            gold: 20,
+            objectives: '200 kcal',
+            timeLimit: Duration(minutes: 90),
+            level: 'hard',
+            enemy: 'centipede',
+          ),
+          ],
+          onQuestCompleted: _goOnQuest,
+        ),
+      );
+
     _views = [
-      _quests
+      _quest
     ];
   }
 
@@ -133,4 +136,29 @@ class _HomePageState extends State<HomePage> {
   void _onAbandon() {
     print('Abandon battle');
   }
+
+
+  void _goOnQuest() {
+    Quest quest = Quest(
+            name: 'Giant Centipede',
+            iconPath: 'assets/images/questIcons/Icons_21.png',
+            experience: 100,
+            gold: 50,
+            objectives: '2000 steps',
+            timeLimit: Duration(hours: 1),
+            level: 'easy',
+            enemy: 'centipede',
+          );
+
+  if (_views.length > 1) {
+    _views[1] = BattleView(quest: quest);  // Zakładamy, że widok na indeksie 1 to BattleView
+  } else {
+    // Jeśli lista nie ma wystarczającej ilości elementów, dodajemy nowy widok
+    _views.add(BattleView(quest: quest));
+  }
+
+  setState(() {
+    _currentIndex = 1;  // Ustawiamy indeks na widok BattleView
+  });
+}
 }
