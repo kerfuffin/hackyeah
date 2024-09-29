@@ -109,17 +109,17 @@ class _HomePageState extends State<HomePage> {
                   Stat(
                     name: 'STR',
                     value: 10,
-                    backgroundColor: Colors.red,
+                    backgroundColor: const Color.fromARGB(255, 201, 80, 71),
                   ),
                   Stat(
                     name: 'DEX',
                     value: 10,
-                    backgroundColor: Colors.green,
+                    backgroundColor: const Color.fromARGB(255, 75, 209, 80),
                   ),
                   Stat(
                     name: 'INT',
                     value: 10,
-                    backgroundColor: Colors.blue,
+                    backgroundColor: const Color.fromARGB(255, 70, 152, 219),
                   ),
                 ],
               ),

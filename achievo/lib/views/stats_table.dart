@@ -59,19 +59,62 @@ class _StatsTableState extends State<StatsTable> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32.0), // Adjusted padding
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ...stats.asMap().entries.map((entry) {
-              int index = entry.key;
-              Stat stat = entry.value;
-              return statCard(index, stat);
-            }).toList(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ...stats.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  Stat stat = entry.value;
+                  return statCard(index, stat);
+                }).toList(),
+              ],
+            ),
+            const SizedBox(height: 32),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Image.asset(
+                  'assets/images/icon_parchment.png',
+                  color: const Color.fromARGB(255, 202, 153, 97),
+                  filterQuality: FilterQuality.none,
+                  width: 48, 
+                  height: 48,
+                  fit: BoxFit.contain,
+              ),
+                Image.asset(
+                  'assets/images/icon_sword.png',
+                  color: const Color.fromARGB(255, 153, 153, 153),
+                  filterQuality: FilterQuality.none,
+                  width: 48,
+                  height: 48,
+                  fit: BoxFit.contain,
+                ),
+                Image.asset(
+                    'assets/images/icon_money_bag.png', 
+                    color: const Color.fromARGB(255, 214, 184, 51),
+                    filterQuality: FilterQuality.none,
+                    width: 48,
+                    height: 48,
+                    fit: BoxFit.contain,
+                ),
+                Image.asset(
+                    'assets/images/icon_bag.png',
+                    color: const Color.fromARGB(255, 139, 92, 67),
+                    filterQuality: FilterQuality.none,
+                    width: 48,
+                    height: 48,
+                    fit: BoxFit.contain,
+                  ),
+              ],
+            )
           ],
-        ),
+        )
       ),
     );
   }
