@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:achievo/animation.dart';
 import 'package:flutter/material.dart';
 
 class BattleView extends StatelessWidget {
@@ -6,6 +9,8 @@ class BattleView extends StatelessWidget {
   final String enemyImagePath;
   final double enemyHealth; // Current health for the enemy
   final double maxEnemyHealth; // Max health for the enemy
+  final double timeLeft; // Time left for the action
+  final double maxTime; // Max time for the action
   final VoidCallback onAbandon; // Callback function for the abandon button
 
   const BattleView({
@@ -15,11 +20,16 @@ class BattleView extends StatelessWidget {
     required this.enemyImagePath,
     required this.enemyHealth,
     required this.maxEnemyHealth,
+    required this.timeLeft,
+    required this.maxTime,
     required this.onAbandon,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final StreamController<String> enemyStateController = StreamController<String>();
+    final StreamController<String> characterStateController = StreamController<String>();
+
     return Stack(
       children: [
         // Background Image
@@ -52,17 +62,43 @@ class BattleView extends StatelessWidget {
           right: 0, // Align to the right side
           child: Column(
             children: [
+              // Label for Time Left
+              Text(
+                'Time Left',
+                style: TextStyle(color: const Color.fromARGB(255, 28, 236, 243), fontSize: 16), // Smaller than enemy name text
+              ),
+              // Progress bar for time left
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20), // Add left and right space
+                height: 5, // Made thinner
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: LinearProgressIndicator(
+                  value: timeLeft / maxTime,
+                  backgroundColor: Colors.grey[300],
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      const Color.fromARGB(2255, 28, 236, 243)),
+                ),
+              ),
+              // Text for time left
+              Text(
+                '${timeLeft.toInt()}',
+                style: TextStyle(color: Color.fromARGB(2255, 28, 236, 243), fontSize: 16),
+              ),
+              const SizedBox(height: 10), // Spacing between progress bars
               Center(
                 child: Text(
                   'Enemy name',
-                  style: TextStyle(color: Colors.red, fontSize: 24),
+                  style: TextStyle(color: Colors.red, fontSize: 24), // Enemy name text
                   textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(height: 10), // Spacing between name and progress bar
+              const SizedBox(height: 10), // Spacing between name and health progress bar
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20), // Add left and right space
-                height: 10,
+                height: 10, // Original height for health bar
                 decoration: BoxDecoration(
                   color: Colors.grey[300],
                   borderRadius: BorderRadius.circular(5),
@@ -84,28 +120,35 @@ class BattleView extends StatelessWidget {
         ),
         // Character area (green)
         Positioned(
-          bottom: 60, // Adjust as needed
-          left: 20,
+          bottom: 55, // Adjust as needed
+          left: 10,
           child: Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.green, width: 3),
+            child: AnimatedImageSequence(
+              animationName: 'dude',
+              initialState: 'idle',
+              availableStates: ['idle'],
+              stateController: characterStateController, // Przekazujemy kontroler
+              size: 150,
+              animSpeed: 300,
             ),
-            child: Image.asset(characterImagePath, fit: BoxFit.cover),
           ),
         ),
         // Enemy area (red)
         Positioned(
-          bottom: 60, // Adjust as needed
-          right: 20,
+          bottom: 55, // Adjust as needed
+          right: 0,
           child: Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.red, width: 3),
+            //decoration: BoxDecoration(
+              //border: Border.all(color: Colors.red, width: 3),
+            //),
+            child:  AnimatedImageSequence(
+              animationName: 'centipede',
+              initialState: 'idle',
+              availableStates: ['idle'],
+              stateController: enemyStateController, // Przekazujemy kontroler
+              size: 200,
+              animSpeed: 200,
             ),
-            child: Image.asset(enemyImagePath, fit: BoxFit.cover),
           ),
         ),
       ],

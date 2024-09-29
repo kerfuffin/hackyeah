@@ -1,8 +1,7 @@
+import 'package:achievo/views/battle_view.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:achievo/controllers/token_controller.dart';
-import 'package:achievo/models/user_data.dart';
 import 'stats_table.dart';
 import 'quest_list.dart';
 
@@ -14,98 +13,114 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TokenController? _tokenController;
-  UserData? _userData;
+  late SharedPreferences prefs;
+  int _currentIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _tokenController = TokenController();
-    _tokenController!.initialize().then((_) {
-      _tokenController!.startSendingToken();
+  late final List<Widget> _views; 
 
-      // Listen for updates
-      _tokenController!.userDataNotifier.addListener(_onDataUpdated);
-    });
-  }
-
-  void _onDataUpdated() {
-    setState(() {
-      _userData = _tokenController!.userDataNotifier.value;
-    });
-  }
-
-  @override
-  void dispose() {
-    _tokenController?.userDataNotifier.removeListener(_onDataUpdated);
-    _tokenController?.stopSendingToken();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // textarea to enter name
-    // button to continue, with animations
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Achievo'),
-        ),
-        body: Column(
-          children: <Widget>[
-            Expanded(
-                flex: 7,
-                child: Container(
-                  color: const Color.fromARGB(255, 116, 46, 0),
-                  child: QuestList(
+  final Widget _quests = Container(
+        color: const Color.fromARGB(255, 116, 46, 0),
+        child: QuestList(
           initialQuests: [
             Quest(
-              name: 'Zadanie 1',
-              iconPath: 'assets/images/Icons_20.png', // Ścieżka do ikony
+              name: 'Quest 1',
+              iconPath: 'assets/images/questIcons/Icons_21.png',
               experience: 100,
               gold: 50,
               objectives: '2000 steps',
               timeLimit: Duration(hours: 1),
-              level: 'easy'
+              level: 'easy',
             ),
             Quest(
-              name: 'Zadanie 2',
-              iconPath: 'assets/images/Icons_20.png', // Ścieżka do ikony
+              name: 'Quest 2',
+              iconPath: 'assets/images/questIcons/Icons_22.png',
               experience: 200,
               gold: 100,
               objectives: '5 km',
               timeLimit: Duration(hours: 2),
-              level: 'hard'
-            ),]),
-                )),
-            Expanded(
-              flex: 3,
-              child: Container(
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                    image: AssetImage('assets/images/stat_bg.png'),
-                    fit: BoxFit.fill,
-                  )),
-                  child: StatsTable(
-                    initialStats: [
-                      Stat(
-                        name: 'STR',
-                        value: 10,
-                        backgroundColor: Colors.red,
-                      ),
-                      Stat(
-                        name: 'DEX',
-                        value: 10,
-                        backgroundColor: Colors.green,
-                      ),
-                      Stat(
-                        name: 'INT',
-                        value: 10,
-                        backgroundColor: Colors.blue,
-                      ),
-                    ],
-                  )),
+              level: 'hard',
             ),
+            Quest(
+              name: 'Quest 3',
+              iconPath: 'assets/images/questIcons/Icons_23.png',
+              experience: 300,
+              gold: 20,
+              objectives: '200 kcal',
+              timeLimit: Duration(minutes: 90),
+              level: 'hard',
+            )
           ],
-        ));
+        ),
+      );
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+    _initializeViews(); 
+  }
+
+  void _initializeViews() {
+    _views = [
+      _quests
+    ];
+  }
+
+  void _loadPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Achievo'),
+      ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            flex: 7,
+            child: IndexedStack(
+              index: _currentIndex,
+              children: _views,
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/stat_bg.png'),
+                  fit: BoxFit.fill,
+                ),
+              ),
+              child: StatsTable(
+                initialStats: [
+                  Stat(
+                    name: 'STR',
+                    value: 10,
+                    backgroundColor: Colors.red,
+                  ),
+                  Stat(
+                    name: 'DEX',
+                    value: 10,
+                    backgroundColor: Colors.green,
+                  ),
+                  Stat(
+                    name: 'INT',
+                    value: 10,
+                    backgroundColor: Colors.blue,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onAbandon() {
+    print('Abandon battle');
   }
 }
