@@ -100,7 +100,7 @@ class _QuestListState extends State<QuestList> {
                         Text(
                           quest.name,
                           style: const TextStyle(
-                            fontSize: 24,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
