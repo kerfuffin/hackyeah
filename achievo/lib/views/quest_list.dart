@@ -9,6 +9,7 @@ class Quest {
   final String objectives;
   final Duration timeLimit;
   final String level;
+  final String enemy;
 
   Quest({
     required this.name,
@@ -18,7 +19,7 @@ class Quest {
     required this.objectives,
     required this.timeLimit,
     required this.level,
-  });
+    required this.enemy });
 }
 
 class QuestList extends StatefulWidget {
@@ -52,6 +53,7 @@ class _QuestListState extends State<QuestList> {
               objectives: quest.objectives,
               timeLimit: quest.timeLimit,
               level: quest.level,
+              enemy: quest.enemy
             ))
         .toList();
   }

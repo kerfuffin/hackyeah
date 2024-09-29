@@ -36,6 +36,7 @@ class _HomePageState extends State<HomePage> {
         objectives: '2000 steps',
         timeLimit: Duration(hours: 1),
         level: 'easy',
+        enemy: 'centipede',
       ),
       Quest(
         name: 'Quest 2',
@@ -45,6 +46,7 @@ class _HomePageState extends State<HomePage> {
         objectives: '5 km',
         timeLimit: Duration(hours: 2),
         level: 'hard',
+        enemy: 'centipede',
       ),
       Quest(
         name: 'Quest 3',
@@ -54,6 +56,7 @@ class _HomePageState extends State<HomePage> {
         objectives: '200 kcal',
         timeLimit: Duration(minutes: 90),
         level: 'hard',
+        enemy: 'centipede',
       ),
       ],
     ),
