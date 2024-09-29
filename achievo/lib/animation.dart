@@ -9,6 +9,7 @@ class AnimatedImageSequence extends StatefulWidget {
   final List<String> availableStates;
   final double? size;
   final StreamController<String> stateController;
+  final int animSpeed;
 
   const AnimatedImageSequence({
     Key? key,
@@ -16,6 +17,8 @@ class AnimatedImageSequence extends StatefulWidget {
     required this.initialState,
     required this.availableStates,
     required this.stateController,
+    required this.animSpeed,
+
     this.size,
   }) : super(key: key);
 
@@ -91,7 +94,7 @@ class _AnimatedImageSequenceState extends State<AnimatedImageSequence> {
 
   void _startAnimation() {
     if (frames[currentState] == null || frames[currentState]!.isEmpty) return;
-    _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+    _timer = Timer.periodic(Duration(milliseconds: widget.animSpeed), (timer) {
       setState(() {
         _currentFrame = (_currentFrame + 1) % frames[currentState]!.length;
       });
@@ -123,6 +126,7 @@ class _AnimatedImageSequenceState extends State<AnimatedImageSequence> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.zero,
       width: widget.size,
       height: widget.size,
       alignment: Alignment.center,

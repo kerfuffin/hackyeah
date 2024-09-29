@@ -1,3 +1,4 @@
+import 'package:achievo/views/battle_view.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -53,30 +54,18 @@ class _HomePageState extends State<HomePage> {
         body: Column(
           children: <Widget>[
             Expanded(
-                flex: 7,
-                child: Container(
-                  color: const Color.fromARGB(255, 116, 46, 0),
-                  child: QuestList(
-          initialQuests: [
-            Quest(
-              name: 'Zadanie 1',
-              iconPath: 'assets/images/Icons_20.png', // Ścieżka do ikony
-              experience: 100,
-              gold: 50,
-              objectives: '2000 steps',
-              timeLimit: Duration(hours: 1),
-              level: 'easy'
+            flex: 7,
+            child: BattleView(
+              backgroundImagePath: 'assets/images/Background.png',
+              characterImagePath: 'assets/images/character.png', // Path to your character image
+              enemyImagePath: 'assets/images/enemy.png', // Path to your enemy image
+              enemyHealth: 1500, // Example current health of the enemy
+              maxEnemyHealth: 2000, // Example max health of the enemy
+              timeLeft: 10, // Example time left for the action
+              maxTime: 20, // Example max time for the action
+              onAbandon: _onAbandon, // Pass the function to the BattleView
             ),
-            Quest(
-              name: 'Zadanie 2',
-              iconPath: 'assets/images/Icons_20.png', // Ścieżka do ikony
-              experience: 200,
-              gold: 100,
-              objectives: '5 km',
-              timeLimit: Duration(hours: 2),
-              level: 'hard'
-            ),]),
-                )),
+            ),
             Expanded(
               flex: 3,
               child: Container(
@@ -107,5 +96,9 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ));
+  }
+
+  void _onAbandon() {
+    print('Abandon battle');
   }
 }
