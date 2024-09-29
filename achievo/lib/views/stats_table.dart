@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nes_ui/nes_ui.dart';
 
 class Stat {
   final String name;
@@ -41,36 +42,16 @@ class _StatsTableState extends State<StatsTable> {
   }
 
   Widget statCard(int index, Stat stat) {
-    return Container(
-      width: 80, // Fixed width for the stat boxes
+    return NesContainer(
+      width: 100, // Fixed width for the stat boxes
       height: 50, // Reduced height for the stat boxes
-      decoration: BoxDecoration(
-        border: Border.all(
-            color: Colors.black, width: 1.0), // Very thin black outer border
-        borderRadius: BorderRadius.circular(8.0), // Uniform border radius
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-              color: Colors.brown, width: 3.0), // Thick brown inner border
-          borderRadius:
-              BorderRadius.circular(7.0), // Same radius as outer border
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            color: stat.backgroundColor, // Background color for the stat
-            border: Border.all(
-                color: Colors.black,
-                width: 1.0), // Very thin black inner border
-            borderRadius:
-                BorderRadius.circular(4.0), // Same radius as other borders
-          ),
-          alignment: Alignment.center, // Center the text
-          child: Text(
-            '${stat.name}: ${stat.value}',
-            style: TextStyle(fontSize: 16.0, color: Colors.white), // Font size
-            textAlign: TextAlign.center,
-          ),
+      padding: EdgeInsets.zero,
+      backgroundColor: stat.backgroundColor,
+      child: Center( 
+        child: Text(
+          '${stat.name}: ${stat.value}',
+          style: TextStyle(fontSize: 20.0, color: Colors.white),
+          textAlign: TextAlign.center,
         ),
       ),
     );
