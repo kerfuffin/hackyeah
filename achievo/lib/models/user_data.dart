@@ -4,12 +4,16 @@ class UserData {
   final int weight;
   final int calories;
   final int sleep;
+  final int xp;
+  final int gold;
 
   UserData({
     required this.steps,
     required this.weight,
     required this.calories,
     required this.sleep,
+    required this.xp,
+    required this.gold,
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) {
@@ -18,6 +22,8 @@ class UserData {
       weight: json['weight'] ?? 0,
       calories: json['calories'] ?? 0,
       sleep: json['sleep'] ?? 0,
+      xp: json['xp'] ?? 0,
+      gold: json['gold'] ?? 0,
     );
   }
 
@@ -27,6 +33,8 @@ class UserData {
       'weight': weight,
       'calories': calories,
       'sleep': sleep,
+      'xp': xp,
+      'gold': gold,
     };
   }
 }
